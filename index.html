@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Сервер</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0f1016;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 3rem;
+            color: #00ff88;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+        header p {
+            font-size: 1.2rem;
+            color: #a0a0a5;
+            margin-bottom: 30px;
+        }
+        .server-card {
+            background: #181a26;
+            border: 2px solid #2a2e43;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+        }
+        .ip-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            background: #0f1016;
+            padding: 15px 25px;
+            border-radius: 10px;
+            border: 1px dashed #00ff88;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ff88;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .ip-box:hover {
+            background: #1f2333;
+        }
+        .copy-btn {
+            background: #00ff88;
+            color: #0f1016;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .copy-btn:hover {
+            background: #00cc6a;
+            transform: scale(1.05);
+        }
+        .status {
+            font-size: 1.1rem;
+            margin-top: 15px;
+            color: #ffaa00;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .feature-item {
+            background: #181a26;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #2a2e43;
+            text-align: left;
+        }
+        .feature-item h3 {
+            color: #00ff88;
+            margin-bottom: 8px;
+        }
+        .feature-item p {
+            color: #8c8f9c;
+            font-size: 0.95rem;
+        }
+        footer {
+            padding: 20px;
+            color: #555869;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>My Craft Server</h1>
+            <p>Лучший выживальческий сервер с крутыми фишками и без лагов!</p>
+        </header>
+
+        <div class="server-card">
+            <h2>IP-адрес для подключения:</h2>
+            <div class="ip-box" onclick="copyIP()">
+                <span id="serverIp">play.myserver.ru</span>
+            </div>
+            <button class="copy-btn" onclick="copyIP()">Скопировать IP</button>
+            <div class="status" id="serverStatus">Проверка статуса сервера...</div>
+        </div>
+
+        <div class="features">
+            <div class="feature-item">
+                <h3>🚀 Без лагов</h3>
+                <p>Мощное железо и стабильный ТПС 20.0 для комфортной игры.</p>
+            </div>
+            <div class="feature-item">
+                <h3>🛡️ Честная экономика</h3>
+                <p>Никакого хардкорного доната, всё можно заработать игровым путем.</p>
+            </div>
+            <div class="feature-item">
+                <h3>👥 Крутое сообщество</h3>
+                <p>Адекватная и отзывчивая администрация, готовая помочь.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Minecraft Server. Все права защищены.
+    </footer>
+
+    <script>
+        // Функция копирования IP
+        function copyIP() {
+            const ipText = document.getElementById("serverIp").innerText;
+            navigator.clipboard.writeText(ipText).then(() => {
+                alert("IP адрес скопирован в буфер обмена: " + ipText);
+            });
+        }
+
+        // Проверка статуса сервера через API (можно заменить play.myserver.ru на свой IP)
+        const serverAddress = "demo.mc-api.net"; // Здесь можно указать твой реальный IP, когда он появится
+        fetch(`https://api.mcsrvstat.us/2/${serverAddress}`)
+            .then(response => response.json())
+            .then(data => {
+                const statusElement = document.getElementById("serverStatus");
+                if (data.online) {
+                    statusElement.innerHTML = `🟢 Сервер онлайн! Игроков онлайн: ${data.players.online} / ${data.players.max}`;
+                    statusElement.style.color = "#00ff88";
+                } else {
+                    statusElement.innerHTML = "🔴 Сервер выключен (или настраивается)";
+                    statusElement.style.color = "#ff4444";
+                }
+            })
+            .catch(() => {
+                document.getElementById("serverStatus").innerHTML = "⚡ IP сервера готов к подключению";
+            });
+    </script>
+
+</body>
+</html>
